@@ -1,8 +1,8 @@
 <template>
-  <div class="d-flex flex-column justify-content-center align-items-center">
+  <div class="mt-4 col-12 d-flex flex-column">
     <b-button @click="goHome" class="mb-4"> Go home </b-button>
     <h2> Panel {{ id }}</h2>
-    <div class="taskAdd col-6 mb-4 mt-4">
+    <div class="taskAdd mb-4 mt-4">
       <b-form-input type="text" v-model="task" @keyup.enter="addTask" placeholder="New task..."> </b-form-input>
       <p> {{ task }} </p>
     </div>
@@ -50,6 +50,7 @@ export default{
     async addTask () {
       await IndexService.createTask(this.id, this.task)
       this.getTasks(this.id)
+      this.task = ''
     },
     async goHome () {
       this.$router.push({name: 'IndexPage'})

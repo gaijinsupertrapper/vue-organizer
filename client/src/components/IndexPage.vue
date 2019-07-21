@@ -1,20 +1,12 @@
 <template>
-    <div class="text-center">
+    <div class="text-center w-100" id="mainpage">
         <h1> Join existing panel </h1>
-        <div class="join_panel d-flex justify-content-center col-12 mt-4 mb-4">
-            <b-form-input type="text" v-model="panel" @keyup.enter = "getPanel" class="col-6">
-               </b-form-input>
-            <h1> {{ panel }} </h1>
-            <h2 v-if="error"> Incorrect handle </h2>
+        <h2 v-if="error" class="mt-2"> Incorrect handle </h2>
+        <div class="join_panel mb-4">
+            <b-form-input type="text" v-model="panel" @keyup.enter = "getPanel()" class="mt-4"> </b-form-input>
         </div>
         <h3> or </h3>
-        <b-button @click="addPanel" class="mt-4 mb-4 col-4"> Add new panel </b-button>
-        <!-- <div v-for="post in posts" v-bind:key="post">
-            <h1> {{ post._id }} </h1>
-
-            <p> {{ post.title }} </p>
-        </div>
-        <h1> THankS </h1> -->
+        <b-button @click="addPanel" class="mt-4"> Add new panel </b-button>
     </div>
 </template>
 <script>
@@ -37,12 +29,26 @@ export default {
       this.posts = response.data
     },
     async addPanel () {
-      await IndexService.addPanel({})
-      this.getPanels()
+      const response = await IndexService.addPanel({})
+      this.getPanel(response.data.id)
     },
-    async getPanel () {
-      this.$router.push({name: 'PanelView', params: { id: this.panel }})
+    async getPanel (panel = this.panel) {
+      const response = await IndexService.fetchPanel(panel)
+      console.log(response.status)
+      if (response.status == 200) {
+        this.$router.push({name: 'PanelView', params: { id: panel }})
+      } else {
+        this.error = true
+      }
     }
   }
 }
 </script>
+<style>
+#mainpage{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+</style>

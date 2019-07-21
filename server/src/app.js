@@ -42,7 +42,8 @@ app.post('/', (req,res) => {
     }
     res.send({
       success: true,
-      message: "Panel created"
+      message: "Panel created",
+      id: new_panel._id
     })
   })
 
@@ -50,25 +51,29 @@ app.post('/', (req,res) => {
 
 app.get('/panel/:id', (req,res) => {
   console.log(req.params)
-  Panels.findById(req.params.panelId, 'title', function(error, panel) {
-    
+  Panels.findById(req.params.id, 'title', function(error, panel) {
+    console.log('chekc')
     if (error){
+      console.log("error")
       res.status(404)
+    }
+    console.log(panel)
+    if (panel == null){
+      res.status(404).send("-1")
+      console.log("Not Found")
     } else {
       res.status(200).send(panel)
-      console.log(panel)
     }
   })
+  console.log('fin')
 })
 
 app.get('/panel/:id/tasks', (req,res) => {
-  console.log(req.query)
   var tasks = Task.find({fromPanel: req.query.panelId}, 'fromPanel description isCompleted',
   function(error,tasks){
     if (error) {
       console.log(error)
     }
-    console.log(tasks)
     res.status(200).send(tasks)
   }).sort({"_id":-1})
   // console.log(tasks)
